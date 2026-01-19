@@ -1,0 +1,41 @@
+PC 포맷 후 업무포털 채팅방 코드 복구 매뉴얼
+
+컴퓨터를 포맷했거나 새 컴퓨터를 샀을 때, 아래 순서대로만 하면 다시 deploy.bat을 사용할 수 있습니다.
+
+1. 필수 프로그램 2개 설치
+
+새 컴퓨터에는 아무것도 없으니 도구를 깔아야 합니다.
+
+Git 설치: git-scm.com에서 다운로드 및 설치 (계속 Next 클릭)
+
+Node.js 설치: nodejs.org에서 'LTS 버전' 다운로드 및 설치 (Firebase 도구용)
+
+2. 코드 내려받기 (Clone)
+
+내 GitHub 창고에 있는 코드와 deploy.bat 파일을 내 컴퓨터로 가져옵니다.
+
+새 폴더를 만들고 마우스 우클릭 -> 'Open Git Bash here' (또는 터미널 열기)
+
+아래 명령어 입력: git clone https://github.com/sbsbundang-tech/portal-chat-backup.git .
+(주의: 맨 뒤에 점(.)을 찍으면 현재 폴더에 파일들이 쫙 풀립니다)
+
+3. Firebase 도구 재설치 & 로그인
+
+도구들은 컴퓨터에 설치되는 것이라 다시 깔아줘야 합니다. 터미널(CMD)을 열고 입력하세요:
+
+설치: npm install -g firebase-tools
+
+로그인 (인증 복구): firebase login
+(브라우저가 뜨면 구글 로그인 후 '허용' 클릭)
+
+4. Git 사용자 정보 입력 (한 번만)
+
+git config --global user.email "sbsbundang@gmail.com"
+
+git config --global user.name "sbsbundang"
+
+🎉 복구 끝!
+
+이제 폴더 안에 deploy.bat 파일이 다시 돌아와 있을 겁니다. 
+
+앞으로는 예전처럼 deploy.bat 파일만 더블 클릭하면 백업과 배포가 정상적으로 작동합니다.
