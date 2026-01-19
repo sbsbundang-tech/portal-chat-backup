@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>업무 포털 채팅</title>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js"></script>
+
+    <style id="anti-fouc">body { opacity: 0; transition: opacity 0.3s ease-in-out; visibility: hidden; }</style>
+    <script>
+        // ==========================================
+        //  [버전 관리] 그림판 Pro 업그레이드 v2.9.6
+        // ==========================================
+        window.APP_VERSION = "2.9.6"; 
+        // ==========================================
+
+        const cssLink = document.createElement("link");
+        cssLink.rel = "stylesheet";
+        cssLink.href = `style.css?v=${window.APP_VERSION}`;
+        
+        cssLink.onload = function() {
+            document.body.style.visibility = 'visible';
+            document.body.style.opacity = '1';
+        };
+        
+        setTimeout(() => {
+            document.body.style.visibility = 'visible';
+            document.body.style.opacity = '1';
+        }, 3000);
+
+        document.head.appendChild(cssLink);
+    </script>
+</head>
+<body>
+
+    <div id="chat-container">
+        <div id="chat-header">
+            <div class="header-item" id="presence-info">
+                <span id="user-count">0</span>
+                <span>명 접속중</span>
+                <button id="user-list-button" class="toolbar-button" title="접속자 목록 보기">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                </button>
+                <ul id="user-list-popover"></ul>
+            </div>
+            
+            <div id="toolbar">
+                <button id="search-toggle" class="toolbar-button" title="대화 검색" onclick="App.EventBus.emit('search:toggle')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </button>
+
+                 <button id="drawer-toggle" class="toolbar-button" title="서랍 (파일 모아보기)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                 </button>
+
+                 <button id="theme-toggle" class="toolbar-button" title="테마 변경">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+                 </button>
+                <button id="notification-toggle" class="toolbar-button" title="알림 켜기/끄기">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>
+                </button>
+                
+                <button class="toolbar-button" title="사용 매뉴얼" onclick="window.open('manual.html', 'manual', 'width=900,height=800'); return false;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                </button>
+                <button class="toolbar-button" title="업데이트 로그" onclick="window.open('changelog.html', 'changelog', 'width=800,height=800'); return false;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                </button>
+
+                <button id="sound-toggle" class="toolbar-button active" style="display:none;" title="소리 켜기/끄기">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+                </button>
+            </div>
+        </div>
+
+        <div id="message-list"></div>
+        
+        <button id="new-message-alert" title="맨 아래로 스크롤">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            <span>새 메시지</span>
+        </button>
+
+        <div id="reply-preview">
+            <div id="reply-preview-text">...</div>
+            <button id="cancel-reply-button" title="답장 취소">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+
+        <div id="input-area-wrapper">
+            <div id="typing-indicator">
+                <div class="typing-dots">
+                    <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
+                </div>
+                <span id="typing-text">...</span>
+            </div>
+
+            <div id="format-toolbar">
+                <button type="button" data-format="bold" title="굵게 (**텍스트**)"><strong>B</strong></button>
+                <button type="button" data-format="strike" title="취소선 (~~텍스트~~)"><del>S</del></button>
+                <button type="button" data-format="code" title="코드 (`텍스트`)">&lt;/&gt;</button>
+                <button type="button" data-format="mention" title="멘션 (@이름)">@</button>
+            </div>
+
+            <form id="message-form" autocomplete="off">
+                <button type="button" id="format-toggle" class="toolbar-button" title="서식 도구">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>
+                </button>
+                <button type="button" id="emoji-button" class="toolbar-button" title="이모지">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+                </button>
+                
+                <textarea id="message-input" placeholder="메시지 입력..." rows="1"></textarea>
+                
+                <button id="send-button" type="submit" title="전송">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+            </form>
+        </div>
+        
+        <input type="file" id="file-input" multiple>
+        
+        <div id="emoji-panel">
+             <div class="emoji-tabs-container">
+                 <button id="emoji-tab-prev" class="emoji-tab-nav" title="이전">&lt;</button>
+                 <div class="emoji-tabs"></div>
+                 <button id="emoji-tab-next" class="emoji-tab-nav" title="다음">&gt;</button>
+             </div>
+             <div class="emoji-grids"></div>
+        </div>
+
+        <ul id="mention-popup"></ul>
+        
+        <div id="drop-overlay">
+            <div id="drop-overlay-text">여기에 파일을 드롭하세요</div>
+        </div>
+
+        <div id="media-drawer">
+            <div class="drawer-header">
+                <h3>📦 서랍</h3>
+                <button id="drawer-close">×</button>
+            </div>
+            <div class="drawer-tabs">
+                <button class="drawer-tab active" data-tab="image">사진</button>
+                <button class="drawer-tab" data-tab="file">파일</button>
+            </div>
+            <div class="drawer-content">
+                <div id="drawer-grid-image" class="drawer-grid active"></div>
+                <div id="drawer-grid-file" class="drawer-grid"></div>
+            </div>
+        </div>
+
+        <div id="ladder-game-modal" class="game-modal">
+            <div class="game-modal-content">
+                <div class="game-header">
+                    <h3>🎮 사다리 타기</h3>
+                    <button class="game-close">×</button>
+                </div>
+                <div class="game-body" id="ladder-setup-step">
+                    <p class="game-desc">참가할 인원을 선택하세요 (최대 10명)</p>
+                    <div class="ladder-user-select" id="ladder-user-list"></div>
+                    <div class="ladder-input-group">
+                        <input type="text" id="ladder-result-input" placeholder="결과 입력 (쉼표로 구분: 커피,당직,꽝...)">
+                    </div>
+                    <button id="ladder-start-btn" class="game-btn-primary">게임 시작</button>
+                </div>
+                <div class="game-body" id="ladder-play-step" style="display:none;">
+                    <canvas id="ladder-canvas"></canvas>
+                    <div id="ladder-result-display"></div>
+                    <div style="display:flex; gap:10px; margin-top:10px;">
+                        <button id="ladder-reset-btn" class="game-btn-secondary" style="margin-top:0; flex:1;">다시 하기</button>
+                        <button id="ladder-send-btn" class="game-btn-primary" style="margin-top:0; flex:2;">결과 채팅방 전송</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="drawing-modal" class="game-modal">
+            <div class="game-modal-content" style="max-width: 700px; width: 95%;">
+                <div class="game-header">
+                    <h3>🎨 Drawing Board Pro</h3>
+                    <button class="game-close">×</button>
+                </div>
+                <div class="game-body" style="padding: 10px;">
+                    <div class="drawing-top-bar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+                        <div class="tool-group" style="display:flex; gap:5px;">
+                            <button id="btn-undo" class="tool-btn" title="실행 취소">↩️</button>
+                            <button id="btn-redo" class="tool-btn" title="다시 실행">↪️</button>
+                        </div>
+                        <div class="tool-group" style="display:flex; gap:5px; align-items:center;">
+                            <button id="tool-pen" class="tool-btn active" title="펜">✏️</button>
+                            <button id="tool-eraser" class="tool-btn" title="지우개">🧹</button>
+                            <button id="tool-fill" class="tool-btn" title="채우기 (페인트)">🪣</button>
+                            <button id="tool-text" class="tool-btn" title="텍스트 입력">T</button>
+                            <span style="width:1px; height:20px; background:#ddd; margin:0 5px;"></span>
+                            <button id="tool-line" class="tool-btn" title="직선">📏</button>
+                            <button id="tool-rect" class="tool-btn" title="사각형">⬜</button>
+                            <button id="tool-circle" class="tool-btn" title="원">⭕</button>
+                        </div>
+                        <div class="tool-group" style="display:flex; gap:5px; align-items:center;">
+                            <button id="btn-add-img" class="tool-btn" title="이미지 불러오기">🖼️</button>
+                            <input type="file" id="drawing-img-input" accept="image/*" style="display:none;">
+                        </div>
+                    </div>
+
+                    <div class="drawing-options-bar" style="display:flex; gap:10px; align-items:center; margin-bottom:10px; background:var(--input-bg-color); padding:8px; border-radius:8px; border:1px solid var(--border-color); flex-wrap:wrap;">
+                         <div style="display:flex; align-items:center; gap:5px;">
+                             <div class="color-palette" id="drawing-palette" style="display:flex; gap:5px;"></div>
+                             <input type="color" id="drawing-color-picker" value="#000000" title="커스텀 색상" style="width:30px; height:30px; border:none; background:none; cursor:pointer;">
+                         </div>
+                         
+                         <div style="display:flex; align-items:center; gap:5px; border-left:1px solid var(--border-color); padding-left:10px;">
+                             <label for="drawing-brush-size" style="font-size:0.8rem;">크기:</label>
+                             <input type="range" id="drawing-brush-size" min="1" max="100" value="5" style="width:80px;">
+                             <span id="brush-size-display" style="font-size:0.8rem; min-width:20px;">5</span>
+                         </div>
+                         
+                         <input type="text" id="drawing-text-input" placeholder="입력할 텍스트" style="display:none; padding:4px 8px; border-radius:4px; border:1px solid var(--border-color); flex-grow:1;">
+
+                         <div style="display:flex; gap:5px; margin-left:auto;">
+                             <button id="btn-filter-gray" class="tool-btn small" style="font-size:0.8rem; padding:0 8px; width:auto;">흑백</button>
+                             <button id="btn-filter-sepia" class="tool-btn small" style="font-size:0.8rem; padding:0 8px; width:auto;">세피아</button>
+                         </div>
+                    </div>
+                    
+                    <div style="position:relative; width:100%; height:400px; overflow:hidden; border:1px solid var(--border-color); border-radius:8px; background-color:#fff;">
+                        <canvas id="drawing-canvas"></canvas>
+                    </div>
+                    
+                    <div style="display:flex; gap:10px; margin-top:10px;">
+                        <button id="drawing-clear-btn" class="game-btn-secondary" style="margin-top:0; flex:1;">모두 지우기</button>
+                        <button id="drawing-send-btn" class="game-btn-primary" style="margin-top:0; flex:2;">전송</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="lightbox-modal">
+        <span id="lightbox-close" title="닫기">&times;</span>
+        <a id="lightbox-download" href="#" download title="이미지 다운로드">💾</a>
+        <img id="lightbox-content">
+    </div>
+
+    <script>
+        const jsFiles = [
+            "js/constants.js",
+            "js/core.js",
+            "js/ui-core.js",
+            "js/ui-overlays.js",
+            "js/ui-apps.js",
+            "js/message.js",
+            "js/main.js"
+        ];
+
+        jsFiles.forEach(file => {
+            const script = document.createElement("script");
+            script.src = `${file}?v=${window.APP_VERSION}`;
+            script.async = false; 
+            document.body.appendChild(script);
+        });
+    </script>
+</body>
+</html>

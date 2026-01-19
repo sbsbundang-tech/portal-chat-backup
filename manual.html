@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>채팅방 사용 매뉴얼</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { padding: 2rem; overflow-y: auto; height: auto; background-color: var(--bg-color); }
+        .manual-container { max-width: 800px; margin: 0 auto; background: var(--card-bg-color); padding: 40px; border-radius: 16px; box-shadow: var(--shadow-md); border: 1px solid var(--border-color); }
+        
+        h1 { color: var(--accent-color); margin-bottom: 10px; text-align: center; letter-spacing: -1px; }
+        .subtitle { text-align: center; color: var(--text-color-tertiary); margin-bottom: 40px; font-size: 1rem; }
+        
+        /* 아코디언 스타일 */
+        .accordion { display: flex; flex-direction: column; gap: 12px; }
+        .accordion-item { border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; background-color: var(--input-bg-color); transition: all 0.3s ease; }
+        .accordion-item.active { background-color: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border-color: var(--accent-color); }
+        
+        .accordion-header { padding: 16px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 600; color: var(--text-color-primary); }
+        .accordion-header:hover { background-color: rgba(0,0,0,0.02); }
+        .accordion-icon { transition: transform 0.3s ease; }
+        .accordion-item.active .accordion-icon { transform: rotate(180deg); }
+        
+        .accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background-color: var(--card-bg-color); }
+        .accordion-item.active .accordion-body { max-height: 1000px; transition: max-height 0.5s ease-in; border-top: 1px solid var(--border-color); }
+        
+        .content-box { padding: 20px; color: var(--text-color-secondary); line-height: 1.6; font-size: 0.95rem; }
+        .keyboard-shortcut { display: inline-block; padding: 2px 8px; background: #eee; border-radius: 4px; border: 1px solid #ddd; font-family: monospace; font-weight: bold; color: #333; margin-bottom: 4px; margin-right: 6px; }
+        
+        .btn-close { display: block; width: 100%; padding: 15px; margin-top: 30px; background: var(--accent-color); color: white; text-align: center; border-radius: 8px; text-decoration: none; font-weight: bold; }
+        .btn-close:hover { opacity: 0.9; }
+        
+        .footer { margin-top: 30px; text-align: center; font-size: 0.8rem; color: #aaa; }
+    </style>
+</head>
+<body>
+
+    <div class="manual-container">
+        <h1>📘 사용 설명서</h1>
+        <div class="subtitle">업무 포털 채팅 시스템의 모든 기능을 확인하세요.</div>
+
+        <div class="accordion">
+            <div class="accordion-item active">
+                <div class="accordion-header">
+                    <span>💬 기본 채팅 및 파일 전송</span>
+                    <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-body">
+                    <div class="content-box">
+                        <strong>메시지 전송:</strong> 텍스트를 입력하고 Enter를 누르거나 전송 버튼을 클릭하세요.<br>
+                        <strong>파일 전송:</strong> 입력창 왼쪽의 <code>+</code> 버튼을 누르거나, 파일을 채팅창으로 <strong>드래그 앤 드롭</strong>하면 전송됩니다.<br>
+                        <strong>멘션:</strong> <code>@이름</code>을 입력하여 특정 사용자를 호출할 수 있습니다.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span>🤖 AI 비서 및 그림 그리기 (NEW)</span>
+                    <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-body">
+                    <div class="content-box">
+                        <p>명령어를 통해 최신 AI 기능을 사용할 수 있습니다.</p>
+                        <br>
+                        <div>
+                            <span class="keyboard-shortcut">/그림 [주제]</span>
+                            <div>원하는 주제를 입력하면 AI가 고품질 이미지를 그려줍니다.</div>
+                            <div style="font-size:0.85rem; color:#666; margin-top:4px;">예: <code>/그림 우주를 유영하는 고양이</code>, <code>/그림 얼큰한 마라탕</code></div>
+                        </div>
+                        <br>
+                        <div>
+                            <span class="keyboard-shortcut">/ai [질문]</span>
+                            <div>궁금한 내용을 물어보면 AI 비서가 답변해줍니다.</div>
+                            <div style="font-size:0.85rem; color:#666; margin-top:4px;">예: <code>/ai 엑셀 함수 VLOOKUP 사용법 알려줘</code></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span>🎮 게임 및 유틸리티</span>
+                    <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-body">
+                    <div class="content-box">
+                        <div>
+                            <span class="keyboard-shortcut">/사다리</span>
+                            <span>참여자를 선택하고 결과를 입력하면 공정한 사다리 게임이 시작됩니다.</span>
+                        </div>
+                        <br>
+                        <div>
+                            <span class="keyboard-shortcut">/그림판</span>
+                            <span>도형, 필터, 펜 도구가 포함된 '그림판 Pro'를 엽니다. 직접 그린 그림을 전송해보세요.</span>
+                        </div>
+                        <br>
+                        <div>
+                            <span class="keyboard-shortcut">/투표</span>
+                            <span>(또는 + 버튼 > 투표) 제목과 항목을 입력하여 실시간 투표를 생성합니다.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span>⚡ 전체 명령어 목록</span>
+                    <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-body">
+                    <div class="content-box">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div><span class="keyboard-shortcut">/그림 [주제]</span> : AI 이미지 생성</div>
+                            <div><span class="keyboard-shortcut">/ai [질문]</span> : AI 챗봇 질문</div>
+                            <div><span class="keyboard-shortcut">/그림판</span> : 그림판 Pro 실행</div>
+                            <div><span class="keyboard-shortcut">/사다리</span> : 사다리 게임</div>
+                            <div><span class="keyboard-shortcut">/주사위</span> : 1~6 주사위 굴리기</div>
+                            <div><span class="keyboard-shortcut">/동전</span> : 앞/뒤 동전 던지기</div>
+                            <div><span class="keyboard-shortcut">/청소</span> : 내 화면 메시지 지우기</div>
+                            <div><span class="keyboard-shortcut">/도움말</span> : 이 매뉴얼 열기</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span>📂 미디어 서랍 (Drawer)</span>
+                    <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-body">
+                    <div class="content-box">
+                        화면 우측 상단의 <strong>[서랍 아이콘]</strong>을 클릭하세요.<br>
+                        채팅방에서 주고받은 <strong>모든 사진과 파일</strong>을 한곳에서 모아볼 수 있습니다.<br>
+                        (과거 대화 내용을 일일이 올리지 않아도 됩니다!)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <a href="javascript:window.close()" class="btn-close">닫기</a>
+        
+        <div class="footer">
+            업무 포털 채팅 시스템 v3.2.5
+        </div>
+    </div>
+
+    <script>
+        // 아코디언 동작 스크립트
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const item = header.parentElement;
+                const isActive = item.classList.contains('active');
+                
+                // 다른 항목 닫기 (원하면 주석 해제)
+                document.querySelectorAll('.accordion-item').forEach(i => {
+                   i.classList.remove('active');
+                });
+
+                if (!isActive) {
+                    item.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
