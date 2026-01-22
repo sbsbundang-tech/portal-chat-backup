@@ -1,5 +1,5 @@
 // =================================================================================
-// 1. 기초 설정 및 상수 (Constants & Utils) - [재미/귀여움 몰빵 확장팩 v2.8]
+// 1. 기초 설정 및 상수 (Constants & Utils) - [재미/귀여움 몰빵 확장팩 v3.0 대규모 업데이트]
 // =================================================================================
 
 // 1. 사용자 정보 파싱
@@ -34,6 +34,7 @@ window.App = {};
 const App = window.App;
 
 // ★ CDN 기본 경로 (Microsoft 3D Animated Emoji)
+// 출처: https://github.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis
 const STICKER_BASE_URL = "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis";
 
 App.Constants = {
@@ -45,7 +46,7 @@ App.Constants = {
         "👋 제스처": ['👋','👌','✌️','🤞','🤟','🤙','👈','👉','👆','👇','👍','👎','✊','👊','👏','🙌','🤝','🙏','💪','👀','👄','🙅','🙆','💁','🙋','🙇','🤦','🤷']
     },
 
-    // 2. 움직이는 스티커 (재미/귀여움/밈 위주 대량 추가)
+    // 2. 움직이는 스티커 (재미/귀여움/밈 위주 대량 추가 + 카테고리 확장)
     ANIMATED_STICKERS: {
         "🤪 킹받음/웃김": [
             { name: "광대", url: `${STICKER_BASE_URL}/Smilies/Clown%20Face.png` },
@@ -64,7 +65,9 @@ App.Constants = {
             { name: "유령", url: `${STICKER_BASE_URL}/Smilies/Ghost.png` },
             { name: "외계인", url: `${STICKER_BASE_URL}/Smilies/Alien.png` },
             { name: "로봇", url: `${STICKER_BASE_URL}/Smilies/Robot.png` },
-            { name: "해골", url: `${STICKER_BASE_URL}/Smilies/Skull.png` }
+            { name: "해골", url: `${STICKER_BASE_URL}/Smilies/Skull.png` },
+            { name: "헤롱헤롱", url: `${STICKER_BASE_URL}/Smilies/Zany%20Face.png` },
+            { name: "안경콧수염", url: `${STICKER_BASE_URL}/Smilies/Disguised%20Face.png` }
         ],
         "🥰 사랑/심쿵": [
             { name: "하트뿅", url: `${STICKER_BASE_URL}/Smilies/Smiling%20Face%20with%20Hearts.png` },
@@ -74,18 +77,23 @@ App.Constants = {
             { name: "천사", url: `${STICKER_BASE_URL}/Smilies/Smiling%20Face%20with%20Halo.png` },
             { name: "포옹", url: `${STICKER_BASE_URL}/Smilies/Hugging%20Face.png` },
             { name: "감동", url: `${STICKER_BASE_URL}/Smilies/Beaming%20Face%20with%20Smiling%20Eyes.png` },
+            { name: "불타는하트", url: `${STICKER_BASE_URL}/Smilies/Heart%20on%20Fire.png` },
             { name: "반지", url: `${STICKER_BASE_URL}/Objects/Ring.png` },
             { name: "보석", url: `${STICKER_BASE_URL}/Objects/Gem%20Stone.png` },
-            { name: "왕관", url: `${STICKER_BASE_URL}/Objects/Crown.png` }
+            { name: "왕관", url: `${STICKER_BASE_URL}/Objects/Crown.png` },
+            { name: "반짝반짝", url: `${STICKER_BASE_URL}/Activities/Sparkles.png` }
         ],
         "🐼 동물농장": [
             { name: "박스냥", url: `${STICKER_BASE_URL}/Animals/Cat%20Face.png` },
+            { name: "검은냥", url: `${STICKER_BASE_URL}/Animals/Black%20Cat.png` },
             { name: "강아지", url: `${STICKER_BASE_URL}/Animals/Dog%20Face.png` },
             { name: "안내견", url: `${STICKER_BASE_URL}/Animals/Guide%20Dog.png` },
             { name: "햄스터", url: `${STICKER_BASE_URL}/Animals/Hamster.png` },
             { name: "토끼", url: `${STICKER_BASE_URL}/Animals/Rabbit%20Face.png` },
             { name: "여우", url: `${STICKER_BASE_URL}/Animals/Fox.png` },
             { name: "팬더", url: `${STICKER_BASE_URL}/Animals/Panda.png` },
+            { name: "곰돌이", url: `${STICKER_BASE_URL}/Animals/Bear.png` },
+            { name: "북극곰", url: `${STICKER_BASE_URL}/Animals/Polar%20Bear.png` },
             { name: "코알라", url: `${STICKER_BASE_URL}/Animals/Koala.png` },
             { name: "나무늘보", url: `${STICKER_BASE_URL}/Animals/Sloth.png` },
             { name: "수달", url: `${STICKER_BASE_URL}/Animals/Otter.png` },
@@ -95,7 +103,9 @@ App.Constants = {
             { name: "거북이", url: `${STICKER_BASE_URL}/Animals/Turtle.png` },
             { name: "유니콘", url: `${STICKER_BASE_URL}/Animals/Unicorn.png` },
             { name: "티라노", url: `${STICKER_BASE_URL}/Animals/T-Rex.png` },
-            { name: "용", url: `${STICKER_BASE_URL}/Animals/Dragon.png` }
+            { name: "용", url: `${STICKER_BASE_URL}/Animals/Dragon.png` },
+            { name: "원숭이", url: `${STICKER_BASE_URL}/Animals/Monkey%20Face.png` },
+            { name: "돼지", url: `${STICKER_BASE_URL}/Animals/Pig%20Face.png` }
         ],
         "😭 멘붕/분노": [
             { name: "폭발", url: `${STICKER_BASE_URL}/Smilies/Exploding%20Head.png` },
@@ -107,10 +117,13 @@ App.Constants = {
             { name: "욕함", url: `${STICKER_BASE_URL}/Smilies/Face%20with%20Symbols%20on%20Mouth.png` },
             { name: "토함", url: `${STICKER_BASE_URL}/Smilies/Face%20Vomiting.png` },
             { name: "졸림", url: `${STICKER_BASE_URL}/Smilies/Sleeping%20Face.png` },
+            { name: "한숨", url: `${STICKER_BASE_URL}/Smilies/Face%20Exhaling.png` },
+            { name: "콧김", url: `${STICKER_BASE_URL}/Smilies/Face%20with%20Steam%20From%20Nose.png` },
             { name: "땀", url: `${STICKER_BASE_URL}/Smilies/Downcast%20Face%20with%20Sweat.png` },
             { name: "더워", url: `${STICKER_BASE_URL}/Smilies/Hot%20Face.png` },
             { name: "추워", url: `${STICKER_BASE_URL}/Smilies/Cold%20Face.png` },
-            { name: "무서워", url: `${STICKER_BASE_URL}/Smilies/Fearful%20Face.png` }
+            { name: "무서워", url: `${STICKER_BASE_URL}/Smilies/Fearful%20Face.png` },
+            { name: "어질어질", url: `${STICKER_BASE_URL}/Smilies/Face%20with%20Spiral%20Eyes.png` }
         ],
         "👍 찐반응/제스처": [
             { name: "최고", url: `${STICKER_BASE_URL}/Hand%20gestures/Thumbs%20Up.png` },
@@ -118,6 +131,8 @@ App.Constants = {
             { name: "OK", url: `${STICKER_BASE_URL}/Hand%20gestures/OK%20Hand.png` },
             { name: "안녕", url: `${STICKER_BASE_URL}/Hand%20gestures/Waving%20Hand.png` },
             { name: "박수", url: `${STICKER_BASE_URL}/Hand%20gestures/Clapping%20Hands.png` },
+            { name: "만세", url: `${STICKER_BASE_URL}/Hand%20gestures/Raising%20Hands.png` },
+            { name: "하이파이브", url: `${STICKER_BASE_URL}/Hand%20gestures/Open%20Hands.png` },
             { name: "기도", url: `${STICKER_BASE_URL}/Hand%20gestures/Folded%20Hands.png` },
             { name: "악수", url: `${STICKER_BASE_URL}/Hand%20gestures/Handshake.png` },
             { name: "화이팅", url: `${STICKER_BASE_URL}/Hand%20gestures/Flexed%20Biceps.png` },
@@ -128,27 +143,51 @@ App.Constants = {
             { name: "사랑해", url: `${STICKER_BASE_URL}/Hand%20gestures/Love-You%20Gesture.png` }
         ],
         "🍔 맛도리/생활": [
-            { name: "폭죽", url: `${STICKER_BASE_URL}/Activities/Party%20Popper.png` },
-            { name: "불", url: `${STICKER_BASE_URL}/Travel%20and%20places/Fire.png` },
             { name: "돈주머니", url: `${STICKER_BASE_URL}/Objects/Money%20Bag.png` },
             { name: "맥주", url: `${STICKER_BASE_URL}/Food/Beer%20Mug.png` },
             { name: "건배", url: `${STICKER_BASE_URL}/Food/Clinking%20Beer%20Mugs.png` },
-            { name: "케이크", url: `${STICKER_BASE_URL}/Food/Birthday%20Cake.png` },
             { name: "피자", url: `${STICKER_BASE_URL}/Food/Pizza.png` },
             { name: "버거", url: `${STICKER_BASE_URL}/Food/Hamburger.png` },
             { name: "핫도그", url: `${STICKER_BASE_URL}/Food/Hot%20Dog.png` },
             { name: "감튀", url: `${STICKER_BASE_URL}/Food/French%20Fries.png` },
+            { name: "팝콘", url: `${STICKER_BASE_URL}/Food/Popcorn.png` },
             { name: "커피", url: `${STICKER_BASE_URL}/Food/Hot%20Beverage.png` },
             { name: "버블티", url: `${STICKER_BASE_URL}/Food/Bubble%20Tea.png` },
             { name: "치킨", url: `${STICKER_BASE_URL}/Food/Poultry%20Leg.png` },
             { name: "도시락", url: `${STICKER_BASE_URL}/Food/Bento%20Box.png` },
             { name: "삼각김밥", url: `${STICKER_BASE_URL}/Food/Rice%20Ball.png` },
-            { name: "로켓", url: `${STICKER_BASE_URL}/Travel%20and%20places/Rocket.png` },
+            { name: "초밥", url: `${STICKER_BASE_URL}/Food/Sushi.png` },
+            { name: "아이스크림", url: `${STICKER_BASE_URL}/Food/Soft%20Ice%20Cream.png` },
+            { name: "도넛", url: `${STICKER_BASE_URL}/Food/Doughnut.png` },
+            { name: "쿠키", url: `${STICKER_BASE_URL}/Food/Cookie.png` },
             { name: "노트북", url: `${STICKER_BASE_URL}/People/Technologist.png` },
+            { name: "전구", url: `${STICKER_BASE_URL}/Objects/Light%20Bulb.png` }
+        ],
+        "🎉 파티/취미 (New)": [
+            { name: "폭죽", url: `${STICKER_BASE_URL}/Activities/Party%20Popper.png` },
+            { name: "꽃가루", url: `${STICKER_BASE_URL}/Activities/Confetti%20Ball.png` },
+            { name: "풍선", url: `${STICKER_BASE_URL}/Activities/Balloon.png` },
+            { name: "케이크", url: `${STICKER_BASE_URL}/Food/Birthday%20Cake.png` },
+            { name: "선물", url: `${STICKER_BASE_URL}/Activities/Wrapped%20Gift.png` },
+            { name: "게임", url: `${STICKER_BASE_URL}/Activities/Video%20Game.png` },
+            { name: "마이크", url: `${STICKER_BASE_URL}/Objects/Microphone.png` },
+            { name: "헤드폰", url: `${STICKER_BASE_URL}/Objects/Headphone.png` },
+            { name: "음표", url: `${STICKER_BASE_URL}/Objects/Musical%20Notes.png` },
+            { name: "팔레트", url: `${STICKER_BASE_URL}/Activities/Artist%20Palette.png` },
+            { name: "로켓", url: `${STICKER_BASE_URL}/Travel%20and%20places/Rocket.png` },
+            { name: "불", url: `${STICKER_BASE_URL}/Travel%20and%20places/Fire.png` }
+        ],
+        "🏃‍♂️ 운동/액티비티 (New)": [
             { name: "트로피", url: `${STICKER_BASE_URL}/Activities/Trophy.png` },
             { name: "메달", url: `${STICKER_BASE_URL}/Activities/1st%20Place%20Medal.png` },
-            { name: "풍선", url: `${STICKER_BASE_URL}/Activities/Balloon.png` },
-            { name: "게임", url: `${STICKER_BASE_URL}/Activities/Video%20Game.png` }
+            { name: "축구", url: `${STICKER_BASE_URL}/Activities/Soccer%20Ball.png` },
+            { name: "농구", url: `${STICKER_BASE_URL}/Activities/Basketball.png` },
+            { name: "야구", url: `${STICKER_BASE_URL}/Activities/Baseball.png` },
+            { name: "테니스", url: `${STICKER_BASE_URL}/Activities/Tennis.png` },
+            { name: "권투", url: `${STICKER_BASE_URL}/Activities/Boxing%20Glove.png` },
+            { name: "자전거", url: `${STICKER_BASE_URL}/Travel%20and%20places/Bicycle.png` },
+            { name: "자동차", url: `${STICKER_BASE_URL}/Travel%20and%20places/Automobile.png` },
+            { name: "비행기", url: `${STICKER_BASE_URL}/Travel%20and%20places/Airplane.png` }
         ]
     },
 
