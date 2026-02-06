@@ -36,26 +36,38 @@ App.PopoverManager = {
         App.EventBus.on('popover:updateMentionHighlight', (idx) => { this.elements.mentionPopup.querySelectorAll('li').forEach((li,i) => li.classList.toggle('selected', i===idx)); });
         App.EventBus.on('popover:reactionMenu', (e) => this.showReactionMenu(e));
         
+        // [수정됨] 접속자 목록 업데이트 로직 (중복 제거 적용)
         App.EventBus.on('userListUpdated', (c) => {
-            const rawUsers = Object.values(c || {}).map(n => String(n).replace(/"/g, '')).filter(n => n).sort();
-            const userCounts = {};
-            rawUsers.forEach(name => { userCounts[name] = (userCounts[name] || 0) + 1; });
-            const groupedUsers = Object.keys(userCounts).sort().map(name => {
-                const count = userCounts[name];
-                return count > 1 ? `${name} (${count})` : name;
+            const rawData = Object.values(c || {});
+            
+            // 이름 추출 및 중복 제거 (Set 사용)
+            const uniqueNamesSet = new Set();
+            rawData.forEach(item => {
+                // item이 객체({name: ...})일 수도 있고 문자열일 수도 있음
+                let name = (typeof item === 'object' && item.name) ? item.name : String(item);
+                name = name.replace(/"/g, '').trim(); 
+                if (name) uniqueNamesSet.add(name);
             });
-            this.userList = groupedUsers;
-            this.elements.userListPopover.innerHTML = groupedUsers.length 
-                ? groupedUsers.map(u => {
-                    const originalName = u.replace(/ \(\d+\)$/, ''); 
-                    return `<li><span style="color:${App.Utils.getUserColor(originalName)}">${App.Utils.escapeHTML(u)}</span></li>`;
+
+            // 가나다순 정렬
+            const uniqueUsers = Array.from(uniqueNamesSet).sort();
+            this.userList = uniqueUsers;
+
+            // 목록 렌더링
+            this.elements.userListPopover.innerHTML = uniqueUsers.length 
+                ? uniqueUsers.map(u => {
+                    return `<li><span style="color:${App.Utils.getUserColor(u)}">${App.Utils.escapeHTML(u)}</span></li>`;
                 }).join('') 
                 : '<li>(접속자 없음)</li>';
-            this.elements.userCountSpan.textContent = rawUsers.length;
             
-            // 💡 [수정됨] updateUserList 함수가 존재하는지 안전하게 확인 후 실행
+            // 접속자 수 카운트 (중복 제거된 인원 수)
+            if (this.elements.userCountSpan) {
+                this.elements.userCountSpan.textContent = uniqueUsers.length;
+            }
+            
+            // 게임 매니저 등 다른 모듈에 전파
             if (App.GameManager && typeof App.GameManager.updateUserList === 'function') {
-                App.GameManager.updateUserList(groupedUsers);
+                App.GameManager.updateUserList(uniqueUsers);
             }
         });
 
